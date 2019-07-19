@@ -43,7 +43,7 @@
           </div>
           <div class="col-md-6">
             <textarea
-              v-model="jsonData[showIndex].arguments.core.Evaluator"
+              v-model="jsonData[showIndex].arguments.core[0]"
               class="form-control"
               rows="1"
             ></textarea>
@@ -55,7 +55,7 @@
           </div>
           <div class="col-md-6">
             <textarea
-              v-model="jsonData[showIndex].arguments.core.Entity"
+              v-model="jsonData[showIndex].arguments.core[1]"
               class="form-control"
               rows="1"
             ></textarea>
@@ -190,7 +190,7 @@ export default {
       };
     },
     saveFile() {
-      const finalData = JSON.stringify(this.jsonData);
+      // const finalData = JSON.stringify(this.jsonData);
       // const data = new Blob([], { type: "" })
       var file = new File([JSON.stringify(this.jsonData)], "result.json", {
         type: "text/plain;charset=utf-8"
