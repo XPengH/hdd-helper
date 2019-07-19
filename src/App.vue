@@ -43,7 +43,7 @@
           </div>
           <div class="col-md-6">
             <textarea
-              v-model="jsonData[showIndex].arguments.core[0]"
+              v-model="jsonData[showIndex].arguments.core[0].value"
               class="form-control"
               rows="1"
             ></textarea>
@@ -55,7 +55,7 @@
           </div>
           <div class="col-md-6">
             <textarea
-              v-model="jsonData[showIndex].arguments.core[1]"
+              v-model="jsonData[showIndex].arguments.core[1].value"
               class="form-control"
               rows="1"
             ></textarea>
