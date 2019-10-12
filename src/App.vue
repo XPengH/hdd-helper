@@ -3,6 +3,7 @@
     <div class="container" v-if="this.jsonData.length > 0">
       <div class="page-header">
         <h1>Anno</h1>
+        <h2>已对数量：{{checkNum}}</h2>
       </div>
       <div class="jumbotron">
         <div class="row">
@@ -26,7 +27,21 @@
             <p>触发词：</p>
           </div>
           <div class="col-md-10">
-            <p>{{jsonData[showIndex].trigger}}</p>
+            <!-- <p>{{jsonData[showIndex].trigger['pos']}}</p> -->
+            <div class="col-md-2">
+            <textarea
+              v-model="jsonData[showIndex].trigger['text']"
+              class="form-control"
+              rows="1"
+            ></textarea>
+          </div>
+          <div class="col-md-3">
+            <textarea
+              v-model="jsonData[showIndex].trigger['pos']"
+              class="form-control"
+              rows="1"
+            ></textarea>
+          </div>
           </div>
         </div>
         <div class="row">
@@ -39,11 +54,25 @@
         </div>
         <div class="row">
           <div class="col-md-2">
-            <p>主语：</p>
+            <p>ARG1：</p>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-2">
             <textarea
-              v-model="jsonData[showIndex].arguments.core[0].value"
+              v-model="jsonData[showIndex].arguments.core[0].label"
+              class="form-control"
+              rows="1"
+            ></textarea>
+          </div>
+          <div class="col-md-3">
+            <textarea
+              v-model="jsonData[showIndex].arguments.core[0].pos_list"
+              class="form-control"
+              rows="1"
+            ></textarea>
+          </div>
+          <div class="col-md-4">
+            <textarea
+              v-model="jsonData[showIndex].arguments.core[0].text_list"
               class="form-control"
               rows="1"
             ></textarea>
@@ -51,11 +80,25 @@
         </div>
         <div class="row">
           <div class="col-md-2">
-            <p>宾语：</p>
+            <p>AGR2：</p>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-2">
             <textarea
-              v-model="jsonData[showIndex].arguments.core[1].value"
+              v-model="jsonData[showIndex].arguments.core[1].label"
+              class="form-control"
+              rows="1"
+            ></textarea>
+          </div>
+          <div class="col-md-3">
+            <textarea
+              v-model="jsonData[showIndex].arguments.core[1].pos_list"
+              class="form-control"
+              rows="1"
+            ></textarea>
+          </div>
+          <div class="col-md-4">
+            <textarea
+              v-model="jsonData[showIndex].arguments.core[1].text_list"
               class="form-control"
               rows="1"
             ></textarea>
@@ -170,7 +213,8 @@ export default {
   data() {
     return {
       jsonData: [],
-      showIndex: 0
+      showIndex: 0,
+      checkNum: 0,
     };
   },
   components: {},
@@ -190,12 +234,32 @@ export default {
       };
     },
     saveFile() {
-      // const finalData = JSON.stringify(this.jsonData);
+      this.jsonData = this.jsonData.map((data)=>{
+        if(typeof(data.arguments.core[0].pos_list) === 'string') {
+          data.arguments.core[0].pos_list = data.arguments.core[0].pos_list.split(',');
+        }
+        return data;
+      })
+      const finalData = JSON.stringify(this.jsonData);
       // const data = new Blob([], { type: "" })
       var file = new File([JSON.stringify(this.jsonData)], "result.json", {
         type: "text/plain;charset=utf-8"
       });
       saveAs(file);
+    }
+  },
+  watch: {    
+    jsonData:{
+      handler(newVal){
+        let num = 0;
+        newVal.forEach((data)=>{
+          if(data.type_correct==='1') {
+            num+=1;
+          }
+        });
+        this.checkNum = num;
+      },      
+      deep: true    //深度监听
     }
   },
   destroyed() {
